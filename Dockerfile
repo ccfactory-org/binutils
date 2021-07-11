@@ -18,6 +18,7 @@ ARG SDK_ROOT=/opt/${TARGET}
 RUN ../binutils-${BINUTILS_VER}/configure --prefix=${SDK_ROOT} --target=${TARGET} --disable-multilib
 
 # make
+ARG MAKEFLAGS
 RUN make -j
 
 # install
