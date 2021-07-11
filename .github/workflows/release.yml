@@ -15,6 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
+      env:
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       run: |
         export HISTFILE=
         echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
