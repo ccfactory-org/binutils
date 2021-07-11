@@ -1,0 +1,34 @@
+name: Publish on push
+# branch name in Git becomes tag name in Docker Hub
+# subseqent pushes to branch overwrites previous Docker tag
+
+on:
+  push:
+    branches: '*'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag binutils
+    - name: Extract tag name
+      env:
+        REF_PATH: ${{ github.ref }}
+      shell: bash
+      run: echo "##[set-output name=ref;]$(echo ${REF_PATH#refs/*/})"
+      id: extract_ref
+    - name: Push to Docker Hub
+      env:
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      run: |
+        # dunno if useful, but why not to erase it?
+        export HISTFILE=
+        echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
+        docker tag binutils ccfactory/binutils:${{ steps.extract_ref.outputs.ref }}
+        docker push ccfactory/binutils:${{ steps.extract_ref.outputs.ref }}
+        docker logout
