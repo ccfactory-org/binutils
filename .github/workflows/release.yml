@@ -15,7 +15,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag binutils
+      run: |
+        export HISTFILE=
+        echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
+        docker build . --file Dockerfile --tag binutils
+        docker logout
     - name: Extract tag name
       env:
         REF_PATH: ${{ github.ref }}
