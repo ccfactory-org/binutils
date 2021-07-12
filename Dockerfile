@@ -23,3 +23,8 @@ RUN make -j
 
 # install
 RUN make install
+
+# prepare final image
+FROM debian/eol:sarge
+
+COPY --from=build ${SDK_ROOT} ${SDK_ROOT}
