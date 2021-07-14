@@ -1,4 +1,4 @@
-FROM ccfactory/buildsystem:gcc-3.3 AS build
+FROM ccfactory/buildsystem:gcc-8.3 AS build
 
 ARG BINUTILS_VER=2.15
 WORKDIR /root
@@ -25,6 +25,6 @@ RUN make -j
 RUN make install
 
 # prepare final image
-FROM debian/eol:sarge
+FROM debian:buster
 
 COPY --from=build ${SDK_ROOT} ${SDK_ROOT}
