@@ -27,4 +27,8 @@ RUN make install
 # prepare final image
 FROM debian:buster
 
+ARG TARGET=x86_64-linux-gnu
+ARG SDK_ROOT=/opt/${TARGET}
 COPY --from=build ${SDK_ROOT} ${SDK_ROOT}
+
+ENV PATH ${SDK_ROOT}/bin:${PATH}
