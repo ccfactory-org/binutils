@@ -1,6 +1,6 @@
 FROM ccfactory/buildsystem:gcc-8.3 AS build
 
-ARG BINUTILS_VER=2.15
+ARG BINUTILS_VER=2.36.1
 WORKDIR /root
 
 # download
