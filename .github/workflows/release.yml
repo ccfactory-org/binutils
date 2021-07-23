@@ -38,7 +38,7 @@ jobs:
       run: |
         export HISTFILE=
         echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
-        docker build . --file Dockerfile --tag binutils \
+        docker build . --file Dockerfile --tag ${{ github.repository }} \
           --build-arg BINUTILS_VER=${{ steps.extract_version.outputs.ver }} \
           --build-arg TARGET=${{ steps.extract_target.outputs.target }}
         docker logout
@@ -49,6 +49,6 @@ jobs:
         # dunno if useful, but why not to erase it?
         export HISTFILE=
         echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
-        docker tag binutils ccfactory/binutils:${{ steps.extract_ref.outputs.ref }}
-        docker push ccfactory/binutils:${{ steps.extract_ref.outputs.ref }}
+        docker tag ${{ github.repository }} ccfactory/${{ github.repository }}:${{ steps.extract_ref.outputs.ref }}
+        docker push ccfactory/${{ github.repository }}:${{ steps.extract_ref.outputs.ref }}
         docker logout
