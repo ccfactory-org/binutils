@@ -14,20 +14,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      env:
-        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      run: |
-        export HISTFILE=
-        echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
-        docker build . --file Dockerfile --tag binutils
-        docker logout
     - name: Extract tag name
       env:
         REF_PATH: ${{ github.ref }}
       shell: bash
       run: echo "##[set-output name=ref;]$(echo ${REF_PATH#refs/*/})"
       id: extract_ref
+    - name: Build the Docker image
+      env:
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      run: |
+        export HISTFILE=
+        echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
+        docker build . --file Dockerfile --tag binutils --build-arg BINUTILS_VER=${{ steps.extract_ref.outputs.ref }}
+        docker logout
     - name: Push to Docker Hub
       env:
         DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
