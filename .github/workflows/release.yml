@@ -26,13 +26,21 @@ jobs:
       shell: bash
       run: echo "##[set-output name=ver;]$(echo ${REF%%-*})"
       id: extract_version
+    - name: Extract target triplet
+      env:
+        REF: ${{ steps.extract_ref.outputs.ref }}
+      shell: bash
+      run: echo "##[set-output name=target;]$(echo ${REF#*-})"
+      id: extract_target
     - name: Build the Docker image
       env:
         DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       run: |
         export HISTFILE=
         echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
-        docker build . --file Dockerfile --tag binutils --build-arg BINUTILS_VER=${{ steps.extract_version.outputs.ver }}
+        docker build . --file Dockerfile --tag binutils \
+          --build-arg BINUTILS_VER=${{ steps.extract_version.outputs.ver }} \
+          --build-arg TARGET=${{ steps.extract_target.outputs.target }}
         docker logout
     - name: Push to Docker Hub
       env:
