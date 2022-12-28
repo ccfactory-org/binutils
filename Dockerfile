@@ -1,4 +1,4 @@
-FROM ccfactory/buildsystem:gcc-8.3 AS build
+FROM ccfactory/buildsystem:gcc-10.2 AS build
 
 ARG BINUTILS_VER=2.36.1
 WORKDIR /root
