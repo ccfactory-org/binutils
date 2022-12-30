@@ -49,6 +49,7 @@ jobs:
         # dunno if useful, but why not to erase it?
         export HISTFILE=
         echo "${DOCKER_ACCESS_TOKEN}" | docker login -u ccfactory --password-stdin
-        docker tag ${{ github.repository }} ccfactory/${{ github.repository }}:${{ steps.extract_ref.outputs.ref }}
-        docker push ccfactory/${{ github.repository }}:${{ steps.extract_ref.outputs.ref }}
+        export REPO=${{ github.repository }}
+        docker tag ${{ github.repository }} ccfactory/${REPO##*/}:${{ steps.extract_ref.outputs.ref }}
+        docker push ccfactory/${REPO##*/}:${{ steps.extract_ref.outputs.ref }}
         docker logout
